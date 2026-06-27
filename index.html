@@ -68,13 +68,7 @@ button:focus-visible { outline: 3px solid rgba(169,95,103,.27); outline-offset: 
 .crown-three { width: 66%; aspect-ratio: 1; right: -13%; top: 18%; }
 .waiting-behind-tree .meeting-tree, .bear-arrival .meeting-tree { opacity: 1; transform: none; }
 .waiting-behind-tree .bear-wrap { opacity: 0; transform: translateX(-38%) scale(.84); animation: none; }
-.waving-paw { position: absolute; z-index: 5; right: 8%; top: 34%; width: 19%; height: 34%; border-radius: 55% 55% 47% 47%; background: radial-gradient(circle at 38% 24%,#fffdf9 0 20%,#f4eadf 67%,#dacbbc 100%); box-shadow: inset -8px -8px 14px rgba(120,92,76,.08),0 5px 12px rgba(96,68,56,.08); transform: rotate(34deg) translateY(34%); transform-origin: 50% 92%; opacity: 0; pointer-events: none; }
-.waving-paw i { position: absolute; left: 36%; top: 18%; width: 31%; aspect-ratio: 1; border-radius: 50%; background: #685149; opacity: .78; box-shadow: -16px -3px 0 -5px #685149,16px -3px 0 -5px #685149; }
 @keyframes breathe { 0%,100% { transform: rotate(-.5deg) translateY(0); } 50% { transform: rotate(.6deg) translateY(-7px); } }
-.blink { position: absolute; z-index: 6; top: 31.2%; width: 9.2%; height: 2.2%; border-radius: 80% 80% 50% 50%; background: #f5e9df; opacity: 0; transform: scaleY(0); animation: blink 5.8s infinite; box-shadow: 0 2px 2px rgba(81,50,42,.25); pointer-events: none; }
-.blink-left { left: 39.1%; transform: rotate(5deg) scaleY(0); }
-.blink-right { left: 56.3%; transform: rotate(-5deg) scaleY(0); animation-delay: .025s; }
-@keyframes blink { 0%, 44%, 48%, 100% { opacity: 0; transform: scaleY(0); } 45%,47% { opacity: .96; transform: scaleY(1); } }
 .mood-sparkles i { position: absolute; z-index: 4; color: #d99aa0; font-style: normal; animation: twinkle 2.5s ease-in-out infinite; }
 .mood-sparkles i:nth-child(1) { top: 17%; left: 4%; }
 .mood-sparkles i:nth-child(2) { top: 8%; right: 7%; animation-delay: .7s; }
@@ -113,13 +107,7 @@ h1 { font-family: Georgia, "Times New Roman", serif; font-size: clamp(2.15rem, 4
 .bear-stage.mood-joyful { transform: translateY(-9px) scale(1.035); filter: saturate(1.1) drop-shadow(0 18px 25px rgba(201,121,128,.18)); }
 .bear-stage.mood-joyful .mood-sparkles i { font-size: 1.3rem; color: #d88691; animation-duration: 1.25s; }
 .bear-stage.bear-arrival .bear-wrap { animation: bearArrival 1.55s var(--ease) both, breathe 4.8s 4.4s ease-in-out infinite; }
-.bear-stage.bear-arrival .waving-paw { animation: pawHello 2.5s 1.15s ease-in-out both; }
-.bear-stage.bear-arrival .blink { animation: introBlink .72s 1.1s ease-in-out 2, blink 5.8s 3s infinite; }
-.bear-stage.bear-talking .blink { animation: talkBlink .65s .18s ease-in-out 1, blink 5.8s 1.1s infinite; }
-@keyframes bearArrival { 0% { opacity: 0; transform: translateX(-48%) rotate(-7deg) scale(.82); filter: blur(5px); } 58% { opacity: 1; transform: translateX(7%) rotate(2deg) scale(1.01); filter: none; } 100% { opacity: 1; transform: none; filter: none; } }
-@keyframes pawHello { 0%,100% { opacity: 0; transform: rotate(34deg) translateY(34%); } 12% { opacity: 1; } 27% { opacity: 1; transform: rotate(-26deg) translateY(-12%); } 43% { opacity: 1; transform: rotate(13deg) translateY(-10%); } 59% { opacity: 1; transform: rotate(-28deg) translateY(-13%); } 75% { opacity: 1; transform: rotate(9deg) translateY(-6%); } 88% { opacity: 1; } }
-@keyframes introBlink { 0%,38%,100% { opacity: 0; transform: scaleY(0); } 48%,62% { opacity: .98; transform: scaleY(1); } }
-@keyframes talkBlink { 0%,32%,100% { opacity: 0; transform: scaleY(0); } 42%,67% { opacity: .98; transform: scaleY(1); } }
+@keyframes bearArrival { 0% { opacity: 0; transform: translateX(-48%) rotate(-7deg) scale(.82); filter: blur(5px); } 58% { opacity: 1; transform: translateX(7%) rotate(2deg) scale(1.01); filter: none; } 78% { transform: translateX(2%) rotate(-1.5deg) scale(.99); } 100% { opacity: 1; transform: none; filter: none; } }
 
 .speech-bubble { position: relative; padding: 25px 27px; border: 1px solid #eadbd4; border-radius: 28px 28px 28px 7px; background: rgba(255,255,255,.83); box-shadow: 0 14px 40px rgba(106,70,60,.09); text-align: left; }
 .speech-bubble::before { content: ""; position: absolute; left: -10px; bottom: -1px; width: 24px; height: 24px; background: white; clip-path: polygon(100% 0,100% 100%,0 100%); }
@@ -358,9 +346,6 @@ h1 { font-family: Georgia, "Times New Roman", serif; font-size: clamp(2.15rem, 4
         </div>
         <div class="bear-wrap">
           <img class="bear" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="Добрый белый медвежонок">
-          <span class="waving-paw" aria-hidden="true"><i></i></span>
-          <span class="blink blink-left"></span>
-          <span class="blink blink-right"></span>
         </div>
         <div class="mood-sparkles" aria-hidden="true"><i>✦</i><i>♥</i><i>✦</i></div>
       </div>
@@ -613,15 +598,13 @@ function showBearIntro() {
   let index = 0;
 
   const drawLine = () => {
-    stage.classList.remove('bear-talking');
-    requestAnimationFrame(() => stage.classList.add('bear-talking'));
     render(`
       <p class="eyebrow">знакомство</p>
       <div class="speech-bubble">
         <span class="speech-name">Белый мишка</span>
         <h1>${CONFIG.text.intro[index]}</h1>
       </div>
-      <p class="lead">${index === 0 ? 'Он машет лапкой и, кажется, старается не показать, как сильно волнуется.' : 'Мишка внимательно ждёт твоего ответа.'}</p>
+      <p class="lead">${index === 0 ? 'Он робко выходит из-за дерева и, кажется, старается не показать, как сильно волнуется.' : 'Мишка внимательно ждёт твоего ответа.'}</p>
       <button class="primary-btn" id="introNext">${index === CONFIG.text.intro.length - 1 ? 'Помогу ❤️' : 'Дальше'}</button>`);
     document.querySelector('#introNext').addEventListener('click', () => {
       softSound(630 + index * 45);
