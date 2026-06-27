@@ -235,7 +235,8 @@ h1 { font-family: Georgia, "Times New Roman", serif; font-size: clamp(2.15rem, 4
 const CONFIG = {
   date: 'Выбери дату',
   time: '19:00',
-  place: 'Скажу чуть позже ✨'
+  place: 'Скажу чуть позже ✨',
+  formEndpoint: 'https://formspree.io/f/xojowevp'
 };
 
 const activities = [
@@ -345,12 +346,42 @@ function showFinal() {
 
 function openInvitation() {
   softSound(720);
+  sendInvitationResponse();
   document.querySelectorAll('[data-setting]').forEach(el => { el.textContent = CONFIG[el.dataset.setting]; });
   document.querySelector('#letterChoice').textContent = state.activity && state.detail ? `Твой выбор: ${state.activity.toLowerCase()} · ${state.detail.replace(/^[^\s]+\s/, '').toLowerCase()}` : '';
   const modal = document.querySelector('#inviteModal');
   modal.classList.add('visible'); modal.setAttribute('aria-hidden', 'false');
   setTimeout(() => document.querySelector('#envelope').classList.add('open'), 950);
   setTimeout(() => { document.querySelector('#openHint').textContent = 'до скорой встречи ♥'; burstHearts(); }, 1700);
+}
+
+async function sendInvitationResponse() {
+  if (state.responseSent || !state.activity || !state.detail) return;
+
+  try {
+    const response = await fetch(CONFIG.formEndpoint, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        _subject: 'Ответ на приглашение ❤️',
+        'Основной выбор': state.activity,
+        'Уточнение': state.detail,
+        'Время ответа': new Intl.DateTimeFormat('ru-RU', {
+          dateStyle: 'long',
+          timeStyle: 'short'
+        }).format(new Date())
+      })
+    });
+
+    if (!response.ok) throw new Error('Formspree request failed');
+    state.responseSent = true;
+    saveState();
+  } catch (error) {
+    console.warn('Не удалось отправить ответ. Повторим при следующем нажатии.', error);
+  }
 }
 
 function closeInvitation() {
